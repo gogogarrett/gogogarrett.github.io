@@ -55,6 +55,8 @@ First thing we need to do is to add the dependencies for [`postgrex` and `ecto`]
 
 Add this to the `mix.exs` file
 
+__file__: `mix.exs`
+
 ```ex
   def application do
     [
@@ -78,9 +80,76 @@ Then we need to run `mix deps.get` to install the dependencies.
 
 Next we need to add a Repo object to configure `ecto`
 
-- repo object
-- changing supervisor file
-- adding in a migration
+__file__: `lib/phoenix_crud/repo.ex`
+
+```ex
+  defmodule Repo do
+    use Ecto.Repo, adapter: Ecto.Adapters.Postgres
+
+    def conf do
+      parse_url "ecto://postgres:postgres@localhost/phoenix_crud"
+    end
+
+    def priv do
+      app_dir(:phoenix_crud, "priv/repo")
+    end
+  end
+```
+
+
+Here we are setting the database config for postgres. We're telling it to use a database called `phoenix_crud`. We are also specifying that all the migration files should go into `priv/repo`.
+
+
+Next we'll change the `supervisor` file to watch this file.
+
+__file__: `lib/phoenix_crud/supervisor.ex`
+
+```ex
+  defmodule PhoenixCrud.Supervisor do
+    use Supervisor
+
+    def start_link do
+      :supervisor.start_link(__MODULE__, [])
+    end
+
+    def init([]) do
+      # Adding repo to be sent into supervise
+      tree = [worker(Repo, [])]
+      supervise(tree, strategy: :one_for_one)
+    end
+  end
+```
+
+
+After we have it setup we can add a migration to create the tables we want.
+Ecto comes with a handle generator to create a migration file.
+
+`mix ecto.gen.migration Repo create_users`
+
+This will create a migration file (very similar to how rails would) that we can use to create our tables.
+
+__file__: `lib/phoenix_crud/repo/migrations/20140815053139_create_users.exs`
+
+```ex
+  defmodule PingPong.Repo.Migrations.CreateUsers do
+    use Ecto.Migration
+
+    def up do
+      "CREATE TABLE users(id serial primary key, content varchar(140))"
+    end
+
+    def down do
+      "DROP TABLE users"
+    end
+  end
+```
+
+Similar to rails, we have an up and down method that get called when we're migrating or rolling back.  Here we're creating a simple `users` table that we will interact with.
+
+At last we finally have our database setup, hurray!
+
+![](/images/excited.gif)
+
 
 ## Adding a simple Welcome Page
 - route
