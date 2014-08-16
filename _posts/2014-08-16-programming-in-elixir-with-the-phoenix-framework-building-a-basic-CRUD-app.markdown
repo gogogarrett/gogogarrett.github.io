@@ -16,23 +16,65 @@ mix do deps.get, compile
 mix phoenix.start
 ```
 This will give you a full project structure to get you started.
+
+
+<br/>
+
+
+#### Project folder
+---
 ![](/images/phoenix_folder_structure.png)
 
 Most of these are pretty self explanatory, but I thought I'd point out a few things of note.
 
 - `deps` is quite similar to `vendor` in rails apps.
-- `mix.ex` is the application config file / `Gemfile` where you can specify dependencies.
+- `mix.exs` is the application config file / `Gemfile` where you can specify dependencies.
 - `web` is the primary place that we will be working with to for this tutorial.
 
+
+<br/>
+
+
+#### Web folder
+---
 ![](/images/phoenix_web_folder_structure.png)
 
 The `web` folder has things that might already be familiar if you've done any web development before.
 
-- MCV: `controllers`, `models`, `views` (view objects / presentation layer - which is awesome), `templates
+- MCV: `controllers`, `models`, `views` (view objects / presentation layer - which is awesome), `templates`
+- `router.ex` which is similar to the `routes.rb` file in rails
+- `channels` which we won't be covering here, but [here is an example of them](https://github.com/chrismccord/phoenix_chat_example)
 
+
+<br />
 
 
 ## Setting up the Database
+
+First thing we need to do is to add the dependencies for [`postgrex` and `ecto`](https://github.com/elixir-lang/ecto) so we can interact with Postgres in our app.
+
+Add this to the `mix.exs` file
+
+```ex
+  def application do
+    [
+      mod: { PhoenixCrud, [] },
+      applications: [:phoenix, :cowboy, :postgrex, :ecto]
+    ]
+  end
+
+  defp deps do
+    [
+      {:phoenix, github: "phoenixframework/phoenix"},
+      {:cowboy, "~> 1.0.0"},
+      {:postgrex, ">= 0.0.0"},
+      {:ecto, "~> 0.2.0"}
+    ]
+  end
+```
+
+Then we need to run `mix deps.get` to install the dependencies.
+
 - repo object
 - changing supervisor file
 - adding in a migration
