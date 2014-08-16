@@ -75,6 +75,9 @@ Add this to the `mix.exs` file
 
 Then we need to run `mix deps.get` to install the dependencies.
 
+
+Next we need to add a Repo object to configure `ecto`
+
 - repo object
 - changing supervisor file
 - adding in a migration
