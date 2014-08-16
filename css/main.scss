@@ -1,0 +1,168 @@
+---
+---
+
+@import "bootstrap";
+
+body {
+  margin: 0;
+  border-top: 4px solid #d04739;
+  font-family: 'Open Sans', sans-serif;
+}
+
+header {
+  margin-top: 50px;
+
+  @media screen and (max-width: 991px) {
+    a.logo {
+      display: none;
+    }
+  }
+
+  a {
+    color: black;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  h1.name {
+    font-weight: 700;
+    font-style: normal;
+    margin-bottom: 5px;
+    margin-top: 10px;
+
+  }
+
+  p.tagline {
+    font-size: 18px;
+    color: rgb(189, 195, 199);
+
+    .social {
+      a {
+        margin-right: 5px;
+        color: rgb(189, 195, 199);
+      }
+    }
+  }
+}
+
+.posts {
+  margin-top: 50px;
+
+  .post-excerpt {
+    line-height: 27px;
+    font-size: 16px;
+    margin-top: 5px;
+
+    a {
+      font-weight: normal;
+      color: black;
+
+      &:hover {
+        text-decoration: none;
+        color: rgb(41, 128, 185);
+      }
+    }
+  }
+}
+
+.post.row {
+  margin-bottom: 40px;
+}
+
+.post {
+  .post-date {
+    font-size: 17px;
+    color: rgb(189, 195, 199);
+  }
+
+  .post-title {
+    font-size: 17px;
+
+    a {
+      font-weight: bold;
+      color: black;
+
+      &:hover {
+        text-decoration: none;
+        color: rgb(41, 128, 185);
+      }
+    }
+  }
+}
+
+
+.post-full {
+  .post-header {
+    margin-top: 50px;
+    margin-bottom: 15px;
+
+    .post-date {
+      margin: 7px 0 0 0;
+    }
+
+    .post-title {
+      font-size: 30px;
+      font-weight: bold;
+      color: black;
+    }
+  }
+
+  article {
+    &.post-content {
+      font-size: 17px;
+      line-height: 27px;
+
+      h2 {
+        font-size: 20px;
+        font-weight: bold;
+        color: black;
+      }
+
+      p {
+       margin-bottom: 20px;
+      }
+
+      img {
+        @extend .img-responsive;
+      }
+
+      .highlight {
+        pre {
+          word-break: inherit;
+          word-wrap: inherit;
+
+          code {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            white-space: inherit;
+            overflow-x: auto;
+
+            font-size: 17px;
+            font-family: "source-sans-pro";
+            line-height: 1.5em;
+
+            p {
+              margin-bottom: 15px;
+            }
+          }
+        }
+      }
+
+      img {
+        @extend .img-responsive
+      }
+    }
+  }
+}
+
+footer.site-footer {
+  height: 80px;
+  margin-top: 50px;
+
+  .content {
+    color: rgb(189, 195, 199);
+    padding-top: 30px;
+  }
+}

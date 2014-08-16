@@ -1,0 +1,26 @@
+# Dependencies
+markdown: redcarpet
+highlighter: pygments
+
+# Permalinks
+permalink: /:title
+
+# Site settings
+title: Garrett Heinlen
+email: heinleng@gmail.com
+description: "Enthusiastic Ruby developer, actively seeking to be ballin'. \nI enjoy long talks on the internet and my perfect \nevening is coding with the ones I love.."
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://gogogarrett.sexy" # the base hostname & protocol for your site
+twitter_username: gogogarrett
+github_username: gogogarrett
+paginate: 5
+
+author:
+  name: "Garrett Heinlen"
+  url: https://twitter.com/gogogarrett
+  gravatar: "211c387e1e0b5fb91ad8979c601a55a9"
+
+github:
+  repo: https://github.com/gogogarrett/blog
+
+version: 1.0.0
