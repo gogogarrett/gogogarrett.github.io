@@ -455,7 +455,8 @@ __file__: `web/controllers/user_controller.ex`
     end
   end
 ```
-Here we create a user instance, validate it and persist it if it passes validations.
+
+Here we create a user instance, validate it and persist it if it passes validations. If it fails, we render the new action again, but this time passing an `@errors` value that can be shown to the user.
 
 ```ex
   def edit(conn, %{"id" => id}) do
@@ -466,7 +467,11 @@ Here we create a user instance, validate it and persist it if it passes validati
         redirect conn, Router.page_path(page: "unauthorized")
     end
   end
+```
 
+This resembles very closly to the show action, so I don't go into any details.
+
+```ex
   def update(conn, %{"id" => id, "user" => params}) do
     user = Repo.get(User, id)
     user = %{user | content: params["content"]}
@@ -480,7 +485,51 @@ Here we create a user instance, validate it and persist it if it passes validati
         json conn, errors: errors
     end
   end
+```
 
+We're almost there! Here we are finding the User from the database.  Then we merge with the new params, validate and update if it passes.
+
+The only downside here is I have not found a nice way to handle the redirection from a PUT or DELETE request.  Rails, and other frameworks, seem to send a GET request and just hi-jack the `_method` param to redirect to the correct action, but I haven't found anything quite like that in Phoenix. So I had to manually send a PUT/PATCH and DELETE request with jQuery, and redirect to the location I pass back via javascript in the client.
+
+__file__: `web/templates/user/edit.ex`
+
+```html
+<div class="col-md-12">
+  <h3>Edit: <%= @user.content %></h3>
+
+  <div class="actions">
+    <form action="/users/<%= @user.id %>" method="post">
+      <div class="form-group">
+        <input type="text" name="user[content]" value="<%= @user.content %>" class="form-control" />
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  $("form").on("submit", function(event) {
+    event.preventDefault();
+
+    $that = this;
+
+    $.ajax({
+      url: $that.getAttribute('action'),
+      type: "PUT",
+      data: $('form').serialize(),
+      success: function(data) {
+        window.location = data.location;
+      }
+    });
+  });
+</script>
+```
+
+On the jQuery ajax `success` I rediect to the location sent back from the controller.
+
+__file__: `web/controllers/user_controller.ex`
+
+```ex
   def destroy(conn, %{"id" => id}) do
     user = Repo.get(User, id)
     case user do
@@ -493,6 +542,82 @@ Here we create a user instance, validate it and persist it if it passes validati
   end
 ```
 
+The last action!  By now, this should all seem pretty straightforward, but it's just here for completeness.
+
+Just as a recap, the entire controller should look like this now:
+
+```ex
+  defmodule PhoenixCrud.UserController do
+    use Phoenix.Controller
+    use Jazz
+    alias PhoenixCrud.Router
+    alias PhoenixCrud.User
+
+    def index(conn, _params) do
+      render conn, "index", users: Repo.all(User)
+    end
+
+    def show(conn, %{"id" => id}) do
+      case Repo.get(User, id) do
+        user when is_map(user) ->
+          render conn, "show", user: user
+        _ ->
+          redirect conn, Router.page_path(page: "unauthorized")
+      end
+    end
+
+    def new(conn, _params) do
+      render conn, "new"
+    end
+
+    def create(conn, %{"user" => %{"content" => content}}) do
+      user = %User{content: content}
+
+      case User.validate(user) do
+        [] ->
+          user = Repo.insert(user)
+          render conn, "show", user: user
+        errors ->
+          render conn, "new", user: user, errors: errors
+      end
+    end
+
+    def edit(conn, %{"id" => id}) do
+      case Repo.get(User, id) do
+        user when is_map(user) ->
+          render conn, "edit", user: user
+        _ ->
+          redirect conn, Router.page_path(page: "unauthorized")
+      end
+    end
+
+    def update(conn, %{"id" => id, "user" => params}) do
+      user = Repo.get(User, id)
+      user = %{user | content: params["content"]}
+
+      case User.validate(user) do
+        [] ->
+          Repo.update(user)
+          # [g] really hacky way to redirect in the client.. (is there a better way?)
+          json conn, 201, JSON.encode!(%{location: Router.user_path(id: user.id)})
+        errors ->
+          json conn, errors: errors
+      end
+    end
+
+    def destroy(conn, %{"id" => id}) do
+      user = Repo.get(User, id)
+      case user do
+        user when is_map(user) ->
+          Repo.delete(user)
+          json conn, 200, JSON.encode!(%{location: Router.users_path})
+        _ ->
+          redirect conn, Router.page_path(page: "unauthorized")
+      end
+    end
+  end
+```
+
 ## Summary<a name="summary"></a>
 
-What I really love about Phoenix, or maybe just even Elixir, is even though I have only been using the language for a week with no prior experience with a functional language - I found it extremely easy to dig into the source code of the project and work out most of the things that came up. I think clarity in a framework can lend to a very high userbase and I'm happy to see for at least the moment, that is the case.
+What I really love about Phoenix, or maybe just even Elixir, is even though I have only been using the language for a week with no prior experience with a functional language - I found it extremely easy to dig into the source code of the project and work out most of the things that came up. I think clarity in a framework can lend to a very high userbase and I'm happy to see for at least the moment, that is the case with Phoenix.
