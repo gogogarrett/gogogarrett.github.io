@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Programming in Elixir with the Phoenix Framework - Building a basic CRUD app"
-categories: jekyll update
+categories: elixir phoenix learning
 ---
 Elixir is **hip**. I want to be hip. So I've been giving elixir a try over the last week. So far I'm very pleased with it overall and look forward to learning it more in-depth.
 
@@ -9,11 +9,17 @@ What finally caused me to take the jump was a framework called [Phoenix](https:/
 
 __TL;DR:__ I _really_ like Phoenix and I plan to use it for more side projects.
 
+- [Installing Phoenix](#installing_phoenix)
+- [Setting up the Database](#setting_up_the_database)
+- [Adding a simple Welcome Page](#adding_a_simple_welcome_page)
+- [Adding a Page controller (and 404 page)](#adding_404_page)
+- [Adding a User Resource](#adding_a_user_resource)
+- [Summary](#summary)
 
 <br />
 
 
-## Installing Phoenix
+## Installing Phoenix<a name="installing_phoenix"></a>
 Installing Phoenix is actually pretty easy, and you can find the full docs [here](https://github.com/phoenixframework/phoenix#setup).
 
 ```bash
@@ -55,7 +61,7 @@ The `web` folder has things that might already be familiar if you've done any pr
 <br />
 
 
-## Setting up the Database
+## Setting up the Database<a name="setting_up_the_database"></a>
 
 First thing we need to do is to add the dependencies for [`postgrex` and `ecto`](https://github.com/elixir-lang/ecto) so we can interact with Postgres in our app.
 
@@ -162,7 +168,7 @@ At last we finally have our database setup, hurray!
 <br />
 
 
-## Adding a simple Welcome Page
+## Adding a simple Welcome Page<a name="adding_a_simple_welcome_page"></a>
 
 Phoenix comes with a `PageController` and splash page by default, but I think it's a good experiment to go through and do it yourself so you can get a feel for how things tie together.
 
@@ -226,9 +232,7 @@ In Phoenix, the views are responsible for rendering the templates.  You can also
 Which could then be used in the templates with `<%= capitalize(@user.content) %>`.
 
 
-Let's get back to our Welcome page and create a simple template, which uses the EEx templating framework - [more can be found here](http://elixir-lang.org/docs/stable/eex/).
-
-This template will be injected into the `templates/layouts/application.html.eex` file where we specifiy using the `<%= @inner %>` tag.  Very similar to `<%= yield %>` in rails applications.
+Let's get back to our Welcome page and create a simple template, which uses the [EEx templating framework](http://elixir-lang.org/docs/stable/eex/).
 
 __file__: `web/templates/index.eex`
 
@@ -239,16 +243,141 @@ __file__: `web/templates/index.eex`
   </div>
 ```
 
-## Adding a Page controller (and 404 page)
-- hook up normal show route
-- hooking up show route to handle unauthorised params
+This template will be injected into the `templates/layouts/application.html.eex` file where we specifiy using the `<%= @inner %>` tag.  Very similar to `<%= yield %>` in rails applications.
 
-## Adding in a User Resource
+If we browse to our server, we should see the new changes reflected.
 
-## Creating a User Model
-- play in console
+![](/images/reflected.gif)
 
-## Adding in a JSON package
 
+<br />
+
+
+## Adding a Page controller (and 404 page)<a name="adding_404_page"></a>
+
+Now that we have a better understanding of how to go through creating a basic route I'll be skimming through this part, but I still want to show how to setup a general 404 page.
+
+First let's add the route to our routes file.
+
+__file__: `web/router.ex`
+
+```ex
+  defmodule PhoenixCrud.Router do
+    use Phoenix.Router
+
+    plug Plug.Static, at: "/static", from: :phoenix_crud
+
+    scope alias: PhoenixCrud do
+      get "/", WelcomeController, :index, as: :root
+      get "/pages/:page", PageController, :show, as: :page
+    end
+  end
+```
+
+After we add the new route in, let's check out the controller.
+
+__file__: `web/controllers/page_controller.ex`
+
+```ex
+  defmodule PhoenixCrud.PageController do
+    use Phoenix.Controller
+
+    # pattern match againsts unauthorized params and redirect to 404 page
+    def show(conn, %{"page" => "unauthorized"}) do
+      conn
+      |> assign_layout(:none)
+      |> render "unauthorized"
+    end
+
+    def show(conn, %{"page" => page}) do
+      render conn, "show", page: page
+    end
+  end
+```
+
+This is a very basic example of how powerful Elixir's pattern matching can be harnessed to make your code easier to write, and as a result be easier to read.
+
+Here we are catching when the `page` paramter equals `unauthorized` and assigning a specific layout then rendering an unauthorized (404) page.
+
+The second show action catches the page param and sets it to a local variable `page` to be used inside the action.  We then render a normal `show` view/template and pass `page` as variable to be used in the templates through `@page` (similar to Rails instance variables.)
+
+
+<br />
+
+
+## Adding a User Resource<a name="adding_a_user_resource"></a>
+
+I think we're finally familiar enough with Phoenix to a point where we can get started adding in the User CRUD.
+
+Like before, let's start with the routes.
+
+__file__: `web/router.ex`
+
+```ex
+  defmodule PhoenixCrud.Router do
+    use Phoenix.Router
+
+    plug Plug.Static, at: "/static", from: :phoenix_crud
+
+    scope alias: PhoenixCrud do
+      get "/", WelcomeController, :index, as: :root
+      get "/pages/:page", PageController, :show, as: :page
+      resources "users", UserController
+    end
+  end
+```
+
+This `resource` method gives us a very rails like REST resource of 7 actions.
+
+![](/images/phoenix_routes.png)
+
+__NOTE__: you can run `mix phoenix.routes` to easily see all the routes of your application.
+
+
+<br />
+
+
+#### Creating a User Model
+
+Before we get right into the controller, we need to setup the model.
+
+__file__: `web/models/user.ex`
+
+```ex
+  defmodule PhoenixCrud.User do
+    use Ecto.Model
+
+    validate user,
+       content: present()
+
+    schema "users" do
+      field :content, :string
+    end
+  end
+```
+
+Here we are including the `Ecto.Model` which will give us all the magic we need in order to get this working. Under the hood it has `Ecto.Model.Schema`, `Ecto.Model.Validations` and will eventually have `Ecto.Model.Callbacks`.
+
+The `validate user` creates a `validate(user)` method that can be used to ensure the model passes these specific validations.
+
+The `schema` matches the database columns so that it can be used for querying.
+
+Let's have a play in the console to see how we can use these objects.
+
+```bash
+user = %User{content: "Hello"}
+user.content #=> "Hello"
+
+Repo.insert(user) # Saves to the database
+
+user = Repo.get(User, 1) #=> %User{content: "Hello}
+
+user = %{user | content: "Goodbye"}
+Repo.update(user) #=> %User{content: "Goodbye"}
+
+Repo.delete(user) # Deleted the object
+```
+
+## Summary<a name="summary"></a>
 
 What I really love about Phoenix, or maybe just even Elixir, is even though I have only been using the language for a week with no prior experience with a functional language - I found it extremely easy to dig into the source code of the project and work out most of the things that came up. I think clarity in a framework can lend to a very high userbase and I'm happy to see for at least the moment, that is the case.
