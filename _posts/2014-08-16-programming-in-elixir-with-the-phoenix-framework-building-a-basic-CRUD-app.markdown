@@ -186,6 +186,8 @@ Phoenix gives us a very nice (familiar) DSL to define our routes. This gives us 
 
 Let's go ahead and take a look at that controller.
 
+__file__: `web/controllers/welcome_controller.ex`
+
 ```ex
   defmodule PhoenixCrud.WelcomeController do
     use Phoenix.Controller
@@ -199,6 +201,8 @@ Let's go ahead and take a look at that controller.
 The code is quite simple.  I'm really pleased with the readability of the code. It makes the transfer of knowledge coming from Rails much easier.
 
 Here we're telling it to render the "index" view/template, so let's have a look at those.
+
+__file__: `web/views/welcome_view.ex`
 
 ```ex
   defmodule PhoenixCrud.WelcomeView do
@@ -225,6 +229,8 @@ Which could then be used in the templates with `<%= capitalize(@user.content) %>
 Let's get back to our Welcome page and create a simple template, which uses the EEx templating framework - [more can be found here](http://elixir-lang.org/docs/stable/eex/).
 
 This template will be injected into the `templates/layouts/application.html.eex` file where we specifiy using the `<%= @inner %>` tag.  Very similar to `<%= yield %>` in rails applications.
+
+__file__: `web/templates/index.eex`
 
 ```
   <div class="jumbotron">
