@@ -41,7 +41,7 @@ This will give you a full project structure to get you started.
 
 Most of these are pretty self explanatory, but I thought I'd point out a few things of note.
 
-- `deps` is quite similar to `vendor` in rails apps.
+- `deps` is managed by mix - and a nice place to find all the 3rd party dependencies of your app. (I found it helpful to dig through some source in here)
 - `mix.exs` is the application config file / `Gemfile` where you can specify dependencies.
 - `web` is the primary place that we will be working with for this tutorial.
 
@@ -55,7 +55,7 @@ Most of these are pretty self explanatory, but I thought I'd point out a few thi
 
 The `web` folder has things that might already be familiar if you've done any previous web development.
 
-- MVC: `models`, `views` (view objects / presentation layer - which is awesome), `controllers` , `templates`
+- MVC: `models`, `views` (view "objects" / presentation layer - which is awesome), `controllers` , `templates`
 - `router.ex` which is similar to the `routes.rb` file in rails
 - `channels` which we won't be covering here, but [here is an example of them](https://github.com/chrismccord/phoenix_chat_example)
 
