@@ -9,6 +9,8 @@ What finally caused me to take the jump was a framework called [Phoenix](https:/
 
 __TL;DR:__ I _really_ like Phoenix and I plan to use it for more side projects.
 
+You can view the [github repo here](https://github.com/gogogarrett/phoenix_crud).
+
 - [Installing Phoenix](#installing_phoenix)
 - [Setting up the Database](#setting_up_the_database)
 - [Adding a simple Welcome Page](#adding_a_simple_welcome_page)
@@ -621,3 +623,7 @@ Just as a recap, the entire controller should look like this now:
 ## Summary<a name="summary"></a>
 
 What I really love about Phoenix, or maybe just even Elixir, is even though I have only been using the language for a week with no prior experience with a functional language - I found it extremely easy to dig into the source code of the project and work out most of the things that came up. I think clarity in a framework can lend to a very high userbase and I'm happy to see for at least the moment, that is the case with Phoenix.
+
+
+[github repo here](https://github.com/gogogarrett/phoenix_crud).
+
