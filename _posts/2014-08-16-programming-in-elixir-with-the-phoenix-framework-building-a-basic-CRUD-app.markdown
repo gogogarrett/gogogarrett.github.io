@@ -297,7 +297,7 @@ __file__: `web/controllers/page_controller.ex`
 
 This is a very basic example of how powerful Elixir's pattern matching can be harnessed to make your code easier to write, and as a result be easier to read.
 
-Here we are catching when the `page` paramter equals `unauthorized` and assigning a specific layout then rendering an unauthorized (404) page.
+Here we are catching when the `page` parameter equals `unauthorized` and assigning a specific layout then rendering an unauthorized (404) page.
 
 The second show action catches the page param and sets it to a local variable `page` to be used inside the action.  We then render a normal `show` view/template and pass `page` as variable to be used in the templates through `@page` (similar to Rails instance variables.)
 
@@ -420,7 +420,7 @@ Next we bring in the fantastic `show` action. Here we do a case statement on `Re
   end
 ```
 
-This new action is very straightfoward so instead of explaing this I'll cover what the template looks like.
+This new action is very straightfoward so instead of explaining this I'll cover what the template looks like.
 
 __file__: `web/templates/users/new.eex`
 
@@ -525,7 +525,7 @@ __file__: `web/templates/user/edit.ex`
 </script>
 ```
 
-On the jQuery ajax `success` I rediect to the location sent back from the controller.
+On the jQuery ajax `success` I redirect to the location sent back from the controller.
 
 __file__: `web/controllers/user_controller.ex`
 
