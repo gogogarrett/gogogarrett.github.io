@@ -236,7 +236,7 @@ Let's get back to our Welcome page and create a simple template, which uses the 
 
 __file__: `web/templates/index.eex`
 
-```
+```html
   <div class="jumbotron">
     <h2>Simple CRUD app using Phoenix and Elixir!</h2>
     <p class="lead">First try at getting a basic crud app up and working with Phoenix.</p>
@@ -376,6 +376,121 @@ user = %{user | content: "Goodbye"}
 Repo.update(user) #=> %User{content: "Goodbye"}
 
 Repo.delete(user) # Deleted the object
+```
+
+<br />
+
+
+#### Let's create this CRUD controller! One action at a time.
+
+__file__: `web/controllers/user_controller.ex`
+
+```ex
+  defmodule PhoenixCrud.UserController do
+    use Phoenix.Controller
+    use Jazz
+    alias PhoenixCrud.Router
+    alias PhoenixCrud.User
+
+    def index(conn, _params) do
+      render conn, "index", users: Repo.all(User)
+    end
+  end
+```
+
+Here we start with the `index` action.  This is pretty straight forward.  We render the `index` template and assign `@users` to `Repo.all(User)` which simply just returns all the users in the database.
+
+```ex
+  def show(conn, %{"id" => id}) do
+    case Repo.get(User, id) do
+      user when is_map(user) ->
+        render conn, "show", user: user
+      _ ->
+        redirect conn, Router.page_path(page: "unauthorized")
+    end
+  end
+```
+
+Next we bring in the fantastic `show` action. Here we do a case statement on `Repo.get(User, id)`. This will return a map object from the database if it finds the record.  Otherwise, it will return an errors array, but here we just catch everything else and redirect to the unauthorized (404) page.
+
+
+```ex
+  def new(conn, _params) do
+    render conn, "new"
+  end
+```
+
+This new action is very straightfoward so instead of explaing this I'll cover what the template looks like.
+
+__file__: `web/templates/users/new.eex`
+
+```html
+  <h1>New User</h1>
+
+  <form action="/users" method="post">
+    <div class="form-group">
+      <label for="user[content]">Content</label>
+      <input type="text" name="user[content]" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+```
+
+Here we create a basic html form that `post` to `/users`.  We simply pass back content under a user hash (simply because this is what I'm used to with rails, but could easily be done anyway you please).
+
+This leads us into the controllers `create` action so let's get back to it.
+
+__file__: `web/controllers/user_controller.ex`
+
+```ex
+  def create(conn, %{"user" => %{"content" => content}}) do
+    user = %User{content: content}
+
+    case User.validate(user) do
+      [] ->
+        user = Repo.insert(user)
+        render conn, "show", user: user
+      errors ->
+        render conn, "new", user: user, errors: errors
+    end
+  end
+```
+Here we create a user instance, validate it and persist it if it passes validations.
+
+```ex
+  def edit(conn, %{"id" => id}) do
+    case Repo.get(User, id) do
+      user when is_map(user) ->
+        render conn, "edit", user: user
+      _ ->
+        redirect conn, Router.page_path(page: "unauthorized")
+    end
+  end
+
+  def update(conn, %{"id" => id, "user" => params}) do
+    user = Repo.get(User, id)
+    user = %{user | content: params["content"]}
+
+    case User.validate(user) do
+      [] ->
+        Repo.update(user)
+        # [g] really hacky way to redirect in the client.. (is there a better way?)
+        json conn, 201, JSON.encode!(%{location: Router.user_path(id: user.id)})
+      errors ->
+        json conn, errors: errors
+    end
+  end
+
+  def destroy(conn, %{"id" => id}) do
+    user = Repo.get(User, id)
+    case user do
+      user when is_map(user) ->
+        Repo.delete(user)
+        json conn, 200, JSON.encode!(%{location: Router.users_path})
+      _ ->
+        redirect conn, Router.page_path(page: "unauthorized")
+    end
+  end
 ```
 
 ## Summary<a name="summary"></a>
