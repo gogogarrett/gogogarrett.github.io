@@ -35,7 +35,7 @@ Most of these are pretty self explanatory, but I thought I'd point out a few thi
 
 - `deps` is quite similar to `vendor` in rails apps.
 - `mix.exs` is the application config file / `Gemfile` where you can specify dependencies.
-- `web` is the primary place that we will be working with to for this tutorial.
+- `web` is the primary place that we will be working with for this tutorial.
 
 
 <br/>
@@ -128,7 +128,7 @@ __file__: `lib/phoenix_crud/supervisor.ex`
 
 
 After we have it setup we can add a migration to create the tables we want.
-Ecto comes with a handle generator to create a migration file.
+Ecto comes with a handy generator to create a migration file.
 
 `mix ecto.gen.migration Repo create_users`
 
@@ -150,7 +150,9 @@ __file__: `lib/phoenix_crud/repo/migrations/20140815053139_create_users.exs`
   end
 ```
 
-Similar to rails, we have an up and down method that get called when we're migrating or rolling back.  Here we're creating a simple `users` table that we will interact with.
+Similar to rails, we have an `up` and `down` method that get called when we're migrating or rolling back.  Here we're creating a simple `users` table that we will interact with.
+
+Let's run that migration with `mix ecto.migrate Repo`.
 
 At last we finally have our database setup, hurray!
 
@@ -162,9 +164,9 @@ At last we finally have our database setup, hurray!
 
 ## Adding a simple Welcome Page
 
-Phoenix comes with a `PageController` and splash page by default, but I think it's a good experiement to go through and do it yourself so you can get a feel for how things tie together.
+Phoenix comes with a `PageController` and splash page by default, but I think it's a good experiment to go through and do it yourself so you can get a feel for how things tie together.
 
-I like to start creating a route, so let's get to it.
+I like to start by creating a route, so let's get to it.
 
 __file__: `web/router.ex`
 
@@ -194,11 +196,42 @@ Let's go ahead and take a look at that controller.
   end
 ```
 
-The code is quite simple.  I'm really
+The code is quite simple.  I'm really pleased with the readability of the code. It makes the transfer of knowledge coming from Rails much easier.
 
-- controller
-- view
-- template
+Here we're telling it to render the "index" view/template, so let's have a look at those.
+
+```ex
+  defmodule PhoenixCrud.WelcomeView do
+    use PhoenixCrud.Views
+
+  end
+```
+
+This is all the boilerplate we need in order to get things working.
+
+First, I should say this is a pretty different concept if you're coming straight from the _Rails Way_&#8482;. These views (in my opinion) are similar to the Presenter pattern.  Some might think they just reflect helpers in rails, but I think it's actually a better approach overall.
+
+In Phoenix, the views are responsible for rendering the templates.  You can also create nice helpers here if you wish.
+
+```ex
+  def capitalize(string) do
+    String.capitalize("abcd")
+  end
+```
+
+Which could then be used in the templates with `<%= capitalize(@user.content) %>`.
+
+
+Let's get back to our Welcome page and create a simple template, which uses the EEx templating framework - [more can be found here](http://elixir-lang.org/docs/stable/eex/).
+
+This template will be injected into the `templates/layouts/application.html.eex` file where we specifiy using the `<%= @inner %>` tag.  Very similar to `<%= yield %>` in rails applications.
+
+```
+  <div class="jumbotron">
+    <h2>Simple CRUD app using Phoenix and Elixir!</h2>
+    <p class="lead">First try at getting a basic crud app up and working with Phoenix.</p>
+  </div>
+```
 
 ## Adding a Page controller (and 404 page)
 - hook up normal show route
