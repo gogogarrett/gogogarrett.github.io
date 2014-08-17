@@ -3,7 +3,7 @@ layout: post
 title:  "Programming in Elixir with the Phoenix Framework - Building a basic CRUD app"
 categories: elixir phoenix learning
 ---
-Elixir is **hip**. I want to be hip. So I've been giving elixir a try over the last week. So far I'm very pleased with it overall and look forward to learning it more in-depth.
+Elixir is **hip**. I want to be hip. So I've been giving Elixir a try over the last week. So far I'm very pleased with it overall and look forward to learning it more in-depth.
 
 What finally caused me to take the jump was a framework called [Phoenix](https://github.com/phoenixframework/phoenix).  It looks similar in many ways to [Rails](http://rubyonrails.org/).
 
@@ -55,7 +55,7 @@ Most of these are pretty self explanatory, but I thought I'd point out a few thi
 
 The `web` folder has things that might already be familiar if you've done any previous web development.
 
-- MVC: `models`, `views` (view "objects" / presentation layer - which is awesome), `controllers` , `templates`
+- MVC: `models`, `views` (view "modules" / presentation layer - which is awesome), `controllers` , `templates`
 - `router.ex` which is similar to the `routes.rb` file in rails
 - `channels` which we won't be covering here, but [here is an example of them](https://github.com/chrismccord/phoenix_chat_example)
 
@@ -92,7 +92,7 @@ __file__: `mix.exs`
 Then we need to run `mix deps.get` to install the dependencies.
 
 
-Next we need to add a Repo object to configure `ecto`
+Next we need to add a Repo module to configure `ecto`
 
 __file__: `lib/phoenix_crud/repo.ex`
 
@@ -158,7 +158,7 @@ __file__: `lib/phoenix_crud/repo/migrations/20140815053139_create_users.exs`
   end
 ```
 
-Similar to rails, we have an `up` and `down` method that get called when we're migrating or rolling back.  Here we're creating a simple `users` table that we will interact with.
+Similar to rails, we have `up` and `down` functions that get called when we're migrating or rolling back.  Here we're creating a simple `users` table that we will interact with.
 
 Let's run that migration with `mix ecto.migrate Repo`.
 
@@ -329,7 +329,7 @@ __file__: `web/router.ex`
   end
 ```
 
-This `resource` method gives us a very rails like REST resource of 7 actions.
+This `resource` function gives us a very rails like REST resource of 7 actions.
 
 ![](/images/phoenix_routes.png)
 
@@ -360,11 +360,11 @@ __file__: `web/models/user.ex`
 
 Here we are including the `Ecto.Model` which will give us all the magic we need in order to get this working. Under the hood it has `Ecto.Model.Schema`, `Ecto.Model.Validations` and will eventually have `Ecto.Model.Callbacks`.
 
-The `validate user` creates a `validate(user)` method that can be used to ensure the model passes these specific validations.
+The `validate user` creates a `validate(user)` function that can be used to ensure the model passes these specific validations.
 
 The `schema` matches the database columns so that it can be used for querying.
 
-Let's have a play in the console to see how we can use these objects.
+Let's have a play in the console to see how we can use these:
 
 ```bash
 user = %User{content: "Hello"}
@@ -377,7 +377,7 @@ user = Repo.get(User, 1) #=> %User{content: "Hello}
 user = %{user | content: "Goodbye"}
 Repo.update(user) #=> %User{content: "Goodbye"}
 
-Repo.delete(user) # Deleted the object
+Repo.delete(user) # Deleted the database record
 ```
 
 <br />
@@ -413,7 +413,7 @@ Here we start with the `index` action.  This is pretty straight forward.  We ren
   end
 ```
 
-Next we bring in the fantastic `show` action. Here we do a case statement on `Repo.get(User, id)`. This will return a map object from the database if it finds the record.  Otherwise, it will return an errors array, but here we just catch everything else and redirect to the unauthorized (404) page.
+Next we bring in the fantastic `show` action. Here we do a case statement on `Repo.get(User, id)`. This will return a map (similar to a Hash in Ruby) from the database if it finds the record.  Otherwise, it will return `nil`, but here we just catch everything else and redirect to the unauthorized (404) page.
 
 
 ```ex
