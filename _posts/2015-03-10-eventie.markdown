@@ -1,0 +1,37 @@
+---
+layout: post
+title:  "Eventie - A launched side project."
+categories: rails ruby learning
+---
+
+I launched my side project [Eventie](http://eventie.io/). Yay.
+
+![](/images/eventie_screen.png)
+
+Since I can remember, I have always been working on something in my free time, learning a new language, trying to make a game, building cheesy apps, but I have never actually launched anything. It's quite depressing when you put it into words, but that was the case.
+
+While attending [RubyConf 2015](http://rubyconf.org.au/2015) in Melbourne I watched this [great talk](https://rubyconf.eventer.com/rubyconf-australia-2015-1223/sideprojects-and-startups-by-collis-ta-eed-1749) by Collin from Envato about side projects and start ups - which I highly recommend. This talk really inspired me to finish something.
+
+I had been working on app called [Eventie](http://eventie.io/) which aims to make getting event sponsorship easier. I previously ran a RubyMotion meetup in Sydney and found it incredibly hard to find sponsors. I have talked to people in similar shoes who have run much bigger events and conferences, so I figured I would try to solve the problem.
+
+[Eventie](http://eventie.io/) helps event organizers find sponsors. Event organizers can easily create a page for their event highlighting all their sponsor packages. This easily allows potential sponsors to have an overview of the available packages at a glance. [Eventie](http://eventie.io/) makes it simple for sponsors to register their interest in a particular package tier.
+
+[Eventie](http://eventie.io/) is built in Rails and I am taking full advantage of the new [Trailblazer framework](https://github.com/apotonick/trailblazer). It's has a fairly minimal feature set and that is fine! It is a very simple application at the moment, but there are many ways where it could grow to become much more.
+
+A few features that I have in mind for the future if things kick off:
+
+- Recommend sponsors to big name events
+- Recommend big name events to sponsors
+- Allow sponsors to have a taste profile (hiring, selling, karma, etc.) to suggest relevant events that would maximize their investment in sponsoring
+- Search for events for a particular category (tech (which type of tech event), sports, music, etc.)
+- Search for events via distance
+- Sync up with Lanyrd to make it easier to create events for organizers
+- and many more..
+
+The main thing to take away though is I didn't. I didn't build every possible feature I could think of. I kept it as simple as possible. I wanted to get it out to there and just ship it. It feels really good knowing that I have actually spent the time, despite having to do the boring tedious tasks to get everything ready, I launched a side project.
+
+Mailers, design, css, forgot password, etc., all the things that aren't actually fun, but are needed to make a project complete actually take a lot more time than you would originally think. In my mind, it's the small things that make a site "finished".
+
+The next step is what I'm really interested to explore. The rest. I am a programmer. I am good at actually building the thing, but there are so many other steps it takes to make a successful product. All which I am still trying to figure out. I am playing with Adwords, Reddit ads, Facebook ads, marketing, monetization strategies, but I still have no idea what's going on, and I love it. I think that is the best way to learn.
+
+Until then.
