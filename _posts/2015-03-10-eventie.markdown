@@ -10,7 +10,7 @@ I launched my side project [Eventie](http://eventie.io/). Yay.
 
 Since I can remember, I have always been working on something in my free time, learning a new language, trying to make a game, building cheesy apps, but I have never actually launched anything. It's quite depressing when you put it into words, but that was the case.
 
-While attending [RubyConf 2015](http://rubyconf.org.au/2015) in Melbourne I watched this [great talk](https://rubyconf.eventer.com/rubyconf-australia-2015-1223/sideprojects-and-startups-by-collis-ta-eed-1749) by Collin from Envato about side projects and start ups - which I highly recommend. This talk really inspired me to finish something.
+While attending [RubyConf 2015](http://rubyconf.org.au/2015) in Melbourne I watched this [great talk](https://rubyconf.eventer.com/rubyconf-australia-2015-1223/sideprojects-and-startups-by-collis-ta-eed-1749) by Collis from Envato about side projects and start ups - which I highly recommend. This talk really inspired me to finish something.
 
 I had been working on app called [Eventie](http://eventie.io/) which aims to make getting event sponsorship easier. I previously ran a RubyMotion meetup in Sydney and found it incredibly hard to find sponsors. I have talked to people in similar shoes who have run much bigger events and conferences, so I figured I would try to solve the problem.
 
